@@ -1,52 +1,94 @@
-# Runway — AI-Powered Expense & Burn Rate Copilot ⚡📱
+# Runway - Android Personal Finance and Expense Copilot
 
-A modern, high-performance personal finance Android application built with **Jetpack Compose**, **Room SQLite**, and an **Intelligent Natural Language & SMS Parsing Engine** (Groq / Gemini Flash).
+A high-performance personal finance Android application built with Jetpack Compose, Room SQLite, and an intelligent natural language and SMS parsing engine.
 
-Designed specifically for ambitious tech professionals to manage monthly runway, track family debt allocations, and maintain a real-time **Safe Daily Burn Rate**.
-
----
-
-## 📸 Key Features
-
-- **Liquid Net Worth Hero Card:** Real-time visibility into liquid cash, monthly burn vs. budget cap, and your exact **Safe Daily Spend** limit.
-- **Universal AI Input Bar:**
-  - Type or dictate in plain natural language (English / Hinglish):
-    - *"Zomato lunch ₹350"*
-    - *"Zepto groceries 195"*
-    - *"Paid 17000 to Meet for flat rent"*
-    - *"IndiGo flight reimbursement credited 12221"*
-  - Paste unformatted bank / UPI debit SMS notifications directly.
-  - Sub-300ms parsing via lightweight free LLM APIs (Groq Llama 3.1 8B or Google Gemini 1.5 Flash).
-  - Built-in resilient **offline fallback parser** if no API key is provided.
-- **Category Runway Progress:**
-  - Visual category tracking with progress bars:
-    - 🍔 **Food & Dining** (Zomato, Swiggy, Zepto, groceries)
-    - 🚕 **Travel & Auto** (Uber, Ola, flights, metro)
-    - 🏠 **Housing & Rent** (Monthly flat rent, maintenance)
-    - 💊 **Health & Supplements** (Apollo Pharmacy, gym, Vit D3)
-    - 💻 **Tech & Utilities** (AWS, Wi-Fi, mobile recharges)
-    - 💳 **Family & Debt** (Allocations for family debt repayment)
-    - 🛍️ **Shopping & Misc**
-- **Voice-to-Expense:** One-tap mic button using Android's speech recognition.
-- **Offline-First Room SQLite Database:** All transactions, categories, and settings are cached locally. Zero data leaks.
+Engineered for tech professionals to track monthly spend velocity, category budget envelopes, and safe daily runway in real time.
 
 ---
 
-## 🛠️ Architecture & Tech Stack
+## Core Features
 
-- **UI Framework:** 100% Jetpack Compose with Material 3 Dark Palette (Deep space obsidian `#0B0D10` with Emerald Green `#00E676`).
-- **Architecture:** Modern MVVM with Android Architecture Components.
-- **Local Storage:** Room Database (SQLite) with Reactive Kotlin `Flow`.
-- **Networking:** OkHttp & Gson for ultra-fast, lightweight structured JSON extraction.
-- **Speech Recognition:** Android `RecognizerIntent` integration.
-- **Build System:** Gradle 8.10 with Version Catalogs (`libs.versions.toml`) and KSP.
+- **Liquid Net Worth Hero Card:** Real-time visibility into liquid capital, monthly spend vs. budget cap, and your exact Safe Daily Spend limit:
+  $$\text{Safe Daily Spend} = \frac{\max(0, \text{Monthly Cap} - \text{Total Spent})}{\text{Days Left in Month}}$$
+- **Universal Input Engine:**
+  - Type or speak in plain English or Hinglish:
+    - `Zomato lunch 350`
+    - `Uber auto 120`
+    - `Paid 17000 for flat rent`
+    - `Stipend credited 45000`
+  - Paste raw, unformatted bank or UPI debit SMS notifications directly.
+  - Sub-300ms structured JSON parsing via lightweight LLM APIs (Groq Llama 3.1 8B or Google Gemini 1.5 Flash).
+  - Built-in resilient offline regex parser when offline or without an API key.
+- **Natural Language Budget and Limit Adjustments:**
+  - Update category limits via voice or text:
+    - `change food limit to 5000`
+    - `set travel budget to 3000`
+  - Adjust global financial metrics:
+    - `set monthly cap to 40000`
+    - `set net worth to 50000`
+  - Add or delete categories on the fly:
+    - `add category gym with limit 2500`
+    - `delete category misc`
+- **Dynamic Category Envelopes:**
+  - New expense categories (e.g., Gym, Books, Gaming) are dynamically detected and auto-created with dedicated progress tracking and Material icons.
+  - Interactive tap-to-edit interface on every category card with quick limit presets.
+- **Voice-to-Expense:** Integrated Android speech recognition dialog (`RecognizerIntent`) for one-tap voice input.
+- **Offline-First Room SQLite Architecture:** Zero cloud dependencies for core accounting. All transactions, profiles, and budget envelopes persist locally on-device.
 
 ---
 
-## 🚀 How to Run in Android Studio
+## Architecture and Tech Stack
 
-1. Open **Android Studio**.
-2. Select **File $\to$ Open** and choose this directory (`C:\Users\shukl\OneDrive\Documents\Projects\Expense`).
-3. Click the **"Sync Project with Gradle Files"** elephant icon in the top right toolbar.
-4. Plug in your Android phone with **USB Debugging** enabled, or choose an Android Emulator.
-5. Hit the green **Run (▶)** button!
+- **UI Framework:** Jetpack Compose with Material 3 Dark Palette (Obsidian `#0B0D10` with Emerald `#00E676` accents).
+- **Architecture Pattern:** MVVM (Model-View-ViewModel) with Unidirectional Data Flow.
+- **Local Persistence:** Room Database (SQLite) with Kotlin Coroutine `Flow` streams.
+- **Annotation Processing:** Kotlin Symbol Processing (KSP).
+- **Networking and JSON:** OkHttp 4 and Gson.
+- **Build System:** Gradle 8.10 with Version Catalogs (`libs.versions.toml`).
+- **Target Android SDK:** Android 15 (API 35), Min SDK 24.
+
+---
+
+## Project Structure
+
+```
+Expense/
+├── app/
+│   ├── src/main/
+│   │   ├── AndroidManifest.xml
+│   │   └── java/com/sudhanshu/expense/
+│   │       ├── ExpenseApplication.kt
+│   │       ├── MainActivity.kt
+│   │       ├── data/
+│   │       │   ├── local/          # Room DB, DAOs (Expense, Category, Profile)
+│   │       │   ├── model/          # Entities (ExpenseEntity, CategoryBudgetEntity, UserProfileEntity)
+│   │       │   ├── remote/         # Dual Groq/Gemini client and offline heuristic parser
+│   │       │   └── repository/     # Unified expense repository and command processor
+│   │       └── ui/
+│   │           ├── screens/        # HomeScreen, Components, SettingsDialog, CategoryDialogs
+│   │           ├── theme/          # Color, Type, Theme (Obsidian Dark)
+│   │           └── viewmodel/      # ExpenseViewModel and reactive StateFlows
+│   └── build.gradle.kts
+├── gradle/
+│   └── libs.versions.toml
+├── build.gradle.kts
+└── settings.gradle.kts
+```
+
+---
+
+## Build and Installation
+
+### Compile via CLI
+Ensure `JAVA_HOME` is set to JDK 21+ and run:
+```bash
+./gradlew assembleDebug
+```
+Output APK is generated at:
+`app/build/outputs/apk/debug/app-debug.apk`
+
+### Run in Android Studio
+1. Open Android Studio.
+2. Select **File -> Open** and choose this project directory.
+3. Select an emulator or connected device with USB debugging enabled.
+4. Click **Run** (`Shift + F10`).
