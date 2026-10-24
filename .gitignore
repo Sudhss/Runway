@@ -1,0 +1,16 @@
+*.iml
+.gradle
+/local.properties
+local.properties
+.idea/
+.kotlin/
+.DS_Store
+/build
+app/build/
+/captures
+.externalNativeBuild
+.cxx
+*.apk
+*.aab
+Runway.apk
+Runway-v2.apk
